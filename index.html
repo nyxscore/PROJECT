@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AI 사이트 모음 - 기능별 정리</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        font-weight: 300;
+      }
+
+      .header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .search-box {
+        padding: 30px;
+        background: white;
+        border-bottom: 1px solid #eee;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 50px;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .category {
+        margin-bottom: 40px;
+        opacity: 1;
+        transition: all 0.3s ease;
+      }
+
+      .category.hidden {
+        display: none;
+      }
+
+      .category-title {
+        font-size: 1.8em;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #667eea;
+        display: flex;
+        align-items: center;
+      }
+
+      .category-icon {
+        font-size: 1.2em;
+        margin-right: 10px;
+      }
+
+      .sites-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .site-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid #f0f0f0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .site-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .site-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .site-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .site-name {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .site-url {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .site-url:hover {
+        color: #764ba2;
+        text-decoration: underline;
+      }
+
+      .site-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      .site-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tag {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 500;
+      }
+
+      .external-link {
+        color: #999;
+        font-size: 0.9em;
+      }
+
+      .category-nav {
+        padding: 30px;
+        background: white;
+        border-bottom: 1px solid #eee;
+      }
+
+      .nav-title {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .nav-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .nav-btn {
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        padding: 12px 20px;
+        font-size: 0.95em;
+        font-weight: 500;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        outline: none;
+      }
+
+      .nav-btn:hover {
+        background: rgba(102, 126, 234, 0.1);
+        border-color: #667eea;
+        color: #667eea;
+        transform: translateY(-2px);
+      }
+
+      .nav-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+        font-size: 1.2em;
+      }
+
+      .no-results.hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .sites-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .container {
+          margin: 10px;
+        }
+
+        .nav-buttons {
+          gap: 8px;
+        }
+
+        .nav-btn {
+          font-size: 0.85em;
+          padding: 10px 16px;
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .site-name span {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .site-name img {
+        margin-right: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 style="cursor: pointer" onclick="location.reload()">
+          🤖 AI 사이트 모음
+        </h1>
+        <p>기능별로 정리된 최고의 AI 도구들을 만나보세요</p>
+      </div>
+      <div class="search-box">
+        <input
+          class="search-input"
+          id="searchInput"
+          placeholder="사이트 이름, 기능, 태그로 검색하세요..."
+          type="text"
+        />
+      </div>
+      <div class="category-nav">
+        <div class="nav-title">카테고리별 바로가기</div>
+        <div class="nav-buttons">
+          <button class="nav-btn active" data-category="all">전체</button>
+          <button class="nav-btn" data-category="텍스트 생성">✍️ 텍스트</button>
+          <button class="nav-btn" data-category="이미지 생성">🎨 이미지</button>
+          <button class="nav-btn" data-category="비디오 생성">🎬 비디오</button>
+          <button class="nav-btn" data-category="음악/오디오">🎵 음악</button>
+          <button class="nav-btn" data-category="코딩/개발">💻 코딩</button>
+          <button class="nav-btn" data-category="데이터 분석">📊 데이터</button>
+          <button class="nav-btn" data-category="생산성">⚡ 생산성</button>
+          <button class="nav-btn" data-category="교육/학습">📚 교육</button>
+          <button class="nav-btn" data-category="마케팅">📈 마케팅</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="category" data-category="텍스트 생성">
+          <h2 class="category-title">
+            <span class="category-icon">✍️</span>
+            텍스트 생성 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="ChatGPT Logo"
+                    src="https://chat.openai.com/favicon.ico"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>ChatGPT방문 ↗</span></span
+                ><a
+                  class="site-url"
+                  href="https://chat.openai.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                OpenAI에서 개발한 대화형 AI 모델. 질문 답변, 텍스트 생성, 코딩
+                지원 등 다양한 작업 가능
+              </div>
+              <div class="site-tags">
+                <span class="tag">대화형</span>
+                <span class="tag">무료/유료</span>
+                <span class="tag">코딩</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="claude.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=claude.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Claude</span></span
+                ><a class="site-url" href="https://claude.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                Anthropic의 AI 어시스턴트. 안전하고 도움이 되는 대화, 긴 문서
+                분석, 복잡한 추론 작업에 특화
+              </div>
+              <div class="site-tags">
+                <span class="tag">문서분석</span>
+                <span class="tag">무료/유료</span>
+                <span class="tag">안전성</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="gemini.google.com logo"
+                    src="https://www.google.com/s2/favicons?domain=gemini.google.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Gemini</span></span
+                ><a
+                  class="site-url"
+                  href="https://gemini.google.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                Google의 최신 AI 모델. 텍스트, 이미지, 코드 등 다양한 형태의
+                입력을 처리하는 멀티모달 AI
+              </div>
+              <div class="site-tags">
+                <span class="tag">멀티모달</span>
+                <span class="tag">무료</span>
+                <span class="tag">구글통합</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="perplexity.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=perplexity.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Perplexity AI</span></span
+                ><a
+                  class="site-url"
+                  href="https://perplexity.ai"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                실시간 웹 검색과 AI를 결합한 검색 엔진. 최신 정보를 바탕으로
+                정확한 답변 제공
+              </div>
+              <div class="site-tags">
+                <span class="tag">검색</span>
+                <span class="tag">실시간</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="copy.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=copy.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Copy.ai</span></span
+                ><a class="site-url" href="https://copy.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                마케팅 카피, 블로그 포스트, 이메일 등 다양한 마케팅 콘텐츠를
+                AI로 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">마케팅</span>
+                <span class="tag">카피라이팅</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="jasper.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=jasper.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Jasper AI</span></span
+                ><a class="site-url" href="https://jasper.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                기업용 AI 콘텐츠 생성 플랫폼. 브랜드 보이스에 맞는 고품질 콘텐츠
+                제작
+              </div>
+              <div class="site-tags">
+                <span class="tag">기업용</span>
+                <span class="tag">브랜딩</span>
+                <span class="tag">유료</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="category" data-category="이미지 생성">
+          <h2 class="category-title">
+            <span class="category-icon">🎨</span>
+            이미지 생성 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="openai.com logo"
+                    src="https://www.google.com/s2/favicons?domain=openai.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>DALL-E 3</span></span
+                ><a
+                  class="site-url"
+                  href="https://openai.com/dall-e-3"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                OpenAI의 최신 이미지 생성 AI. 자연어 설명을 통해 고품질의
+                창의적인 이미지 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">고품질</span>
+                <span class="tag">창의적</span>
+                <span class="tag">유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="midjourney.com logo"
+                    src="https://www.google.com/s2/favicons?domain=midjourney.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Midjourney</span></span
+                ><a
+                  class="site-url"
+                  href="https://midjourney.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                Discord 기반의 AI 이미지 생성 도구. 예술적이고 창의적인 이미지
+                생성에 특화
+              </div>
+              <div class="site-tags">
+                <span class="tag">예술적</span>
+                <span class="tag">Discord</span>
+                <span class="tag">유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="stablediffusionweb.com logo"
+                    src="https://www.google.com/s2/favicons?domain=stablediffusionweb.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Stable Diffusion</span></span
+                ><a
+                  class="site-url"
+                  href="https://stablediffusionweb.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                오픈소스 이미지 생성 AI. 다양한 스타일과 높은 커스터마이징이
+                가능
+              </div>
+              <div class="site-tags">
+                <span class="tag">오픈소스</span>
+                <span class="tag">커스터마이징</span>
+                <span class="tag">무료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="leonardo.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=leonardo.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Leonardo AI</span></span
+                ><a class="site-url" href="https://leonardo.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                게임과 콘텐츠 제작을 위한 AI 이미지 생성 도구. 일관성 있는
+                캐릭터와 에셋 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">게임</span>
+                <span class="tag">캐릭터</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="firefly.adobe.com logo"
+                    src="https://www.google.com/s2/favicons?domain=firefly.adobe.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Adobe Firefly</span></span
+                ><a
+                  class="site-url"
+                  href="https://firefly.adobe.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                Adobe의 창작용 AI. Photoshop, Illustrator 등과 통합되어 전문적인
+                디자인 작업 지원
+              </div>
+              <div class="site-tags">
+                <span class="tag">Adobe통합</span>
+                <span class="tag">전문적</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="canva.com logo"
+                    src="https://www.google.com/s2/favicons?domain=canva.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Canva AI</span></span
+                ><a class="site-url" href="https://canva.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                Canva에 통합된 AI 이미지 생성. 디자인 템플릿과 함께 사용하여
+                완성도 높은 디자인 제작
+              </div>
+              <div class="site-tags">
+                <span class="tag">디자인</span>
+                <span class="tag">템플릿</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="category" data-category="비디오 생성">
+          <h2 class="category-title">
+            <span class="category-icon">🎬</span>
+            비디오 생성 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="runwayml.com logo"
+                    src="https://www.google.com/s2/favicons?domain=runwayml.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Runway ML</span></span
+                ><a class="site-url" href="https://runwayml.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 비디오 생성 및 편집 도구. 텍스트에서 비디오 생성, 객체 제거,
+                스타일 변환 등
+              </div>
+              <div class="site-tags">
+                <span class="tag">비디오편집</span>
+                <span class="tag">Text-to-Video</span>
+                <span class="tag">유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="synthesia.io logo"
+                    src="https://www.google.com/s2/favicons?domain=synthesia.io&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Synthesia</span></span
+                ><a class="site-url" href="https://synthesia.io" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 아바타를 사용한 비디오 생성. 텍스트 입력만으로 자연스러운
+                말하는 영상 제작
+              </div>
+              <div class="site-tags">
+                <span class="tag">AI아바타</span>
+                <span class="tag">프레젠테이션</span>
+                <span class="tag">유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="pika.art logo"
+                    src="https://www.google.com/s2/favicons?domain=pika.art&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Pika Labs</span></span
+                ><a class="site-url" href="https://pika.art" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                간단한 텍스트 프롬프트로 창의적인 비디오 생성. 애니메이션과 실사
+                영상 모두 지원
+              </div>
+              <div class="site-tags">
+                <span class="tag">창의적</span>
+                <span class="tag">애니메이션</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="steve.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=steve.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Steve AI</span></span
+                ><a class="site-url" href="https://steve.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                스크립트에서 완성된 비디오까지 자동 생성. 마케팅, 교육용 비디오
+                제작에 최적화
+              </div>
+              <div class="site-tags">
+                <span class="tag">마케팅</span>
+                <span class="tag">교육</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="category" data-category="음악/오디오">
+          <h2 class="category-title">
+            <span class="category-icon">🎵</span>
+            음악/오디오 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="elevenlabs.io logo"
+                    src="https://www.google.com/s2/favicons?domain=elevenlabs.io&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>ElevenLabs</span></span
+                ><a
+                  class="site-url"
+                  href="https://elevenlabs.io"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                고품질 AI 음성 생성. 자연스러운 TTS와 음성 복제 기능
+              </div>
+              <div class="site-tags">
+                <span class="tag">TTS</span>
+                <span class="tag">음성복제</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="murf.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=murf.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Murf AI</span></span
+                ><a class="site-url" href="https://murf.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                전문적인 보이스오버 생성. 다양한 언어와 감정 표현 지원
+              </div>
+              <div class="site-tags">
+                <span class="tag">보이스오버</span>
+                <span class="tag">다국어</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="otter.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=otter.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Otter.ai</span></span
+                ><a class="site-url" href="https://otter.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                실시간 음성 인식 및 회의록 자동 생성. 회의, 강의 내용을 텍스트로
+                변환
+              </div>
+              <div class="site-tags">
+                <span class="tag">음성인식</span>
+                <span class="tag">회의록</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="aiva.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=aiva.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>AIVA</span></span
+                ><a class="site-url" href="https://aiva.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 음악 작곡 도구. 클래식, 팝, 게임 음악 등 다양한 장르의 음악
+                생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">음악생성</span>
+                <span class="tag">작곡</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="openai.com logo"
+                    src="https://www.google.com/s2/favicons?domain=openai.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Whisper</span></span
+                ><a
+                  class="site-url"
+                  href="https://openai.com/research/whisper"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                OpenAI의 오픈소스 음성 인식 시스템. 다국어 지원 및 높은 정확도
+              </div>
+              <div class="site-tags">
+                <span class="tag">오픈소스</span>
+                <span class="tag">다국어</span>
+                <span class="tag">무료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="suno.com logo"
+                    src="https://www.google.com/s2/favicons?domain=suno.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Suno AI</span></span
+                ><a class="site-url" href="https://suno.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                텍스트로 완전한 노래 생성. 가사, 멜로디, 보컬까지 AI가 자동 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">노래생성</span>
+                <span class="tag">가사</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="udio.com logo"
+                    src="https://www.google.com/s2/favicons?domain=udio.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Udio</span></span
+                ><a class="site-url" href="https://udio.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                프롬프트 기반 음악 생성. 다양한 장르와 스타일의 고품질 음악 제작
+              </div>
+              <div class="site-tags">
+                <span class="tag">음악생성</span>
+                <span class="tag">다장르</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="category" data-category="생산성">
+          <h2 class="category-title">
+            <span class="category-icon">⚡</span>
+            생산성 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="notion.so logo"
+                    src="https://www.google.com/s2/favicons?domain=notion.so&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Notion AI</span></span
+                ><a class="site-url" href="https://notion.so" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                노션에 통합된 AI. 문서 작성, 요약, 번역, 아이디어 정리 등을 도움
+              </div>
+              <div class="site-tags">
+                <span class="tag">문서작성</span>
+                <span class="tag">요약</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="grammarly.com logo"
+                    src="https://www.google.com/s2/favicons?domain=grammarly.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Grammarly</span></span
+                ><a
+                  class="site-url"
+                  href="https://grammarly.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 기반 영문 문법 검사 및 글쓰기 도우미. 실시간 문법, 맞춤법, 톤
+                개선
+              </div>
+              <div class="site-tags">
+                <span class="tag">문법검사</span>
+                <span class="tag">영어</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="calendly.com logo"
+                    src="https://www.google.com/s2/favicons?domain=calendly.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Calendly AI</span></span
+                ><a class="site-url" href="https://calendly.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 기반 스케줄 관리. 자동 미팅 조율 및 최적 시간 제안
+              </div>
+              <div class="site-tags">
+                <span class="tag">스케줄링</span>
+                <span class="tag">미팅</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="zapier.com logo"
+                    src="https://www.google.com/s2/favicons?domain=zapier.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Zapier AI</span></span
+                ><a class="site-url" href="https://zapier.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI를 활용한 업무 자동화. 다양한 앱들을 연결하여 반복 작업 자동화
+              </div>
+              <div class="site-tags">
+                <span class="tag">자동화</span>
+                <span class="tag">워크플로우</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="todoist.com logo"
+                    src="https://www.google.com/s2/favicons?domain=todoist.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Todoist AI</span></span
+                ><a class="site-url" href="https://todoist.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 기반 할 일 관리. 작업 우선순위 제안 및 프로젝트 템플릿 자동
+                생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">할일관리</span>
+                <span class="tag">우선순위</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="reclaim.ai logo"
+                    src="https://www.google.com/s2/favicons?domain=reclaim.ai&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Reclaim AI</span></span
+                ><a class="site-url" href="https://reclaim.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 캘린더 어시스턴트. 자동으로 포커스 타임, 미팅, 습관을
+                스케줄에 배치
+              </div>
+              <div class="site-tags">
+                <span class="tag">캘린더</span>
+                <span class="tag">포커스타임</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="category" data-category="디자인">
+          <h2 class="category-title">
+            <span class="category-icon">🎭</span>
+            디자인 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="figma.com logo"
+                    src="https://www.google.com/s2/favicons?domain=figma.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Figma AI</span></span
+                ><a class="site-url" href="https://figma.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                Figma에 내장된 AI 기능. 자동 레이아웃, 컬러 팔레트 제안, 디자인
+                시스템 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">UI/UX</span>
+                <span class="tag">프로토타입</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="framer.com logo"
+                    src="https://www.google.com/s2/favicons?domain=framer.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Framer AI</span></span
+                ><a class="site-url" href="https://framer.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI로 웹사이트 생성. 텍스트 입력만으로 완전한 웹사이트 디자인 및
+                개발
+              </div>
+              <div class="site-tags">
+                <span class="tag">웹사이트</span>
+                <span class="tag">노코드</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="uizard.io logo"
+                    src="https://www.google.com/s2/favicons?domain=uizard.io&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Uizard</span></span
+                ><a class="site-url" href="https://uizard.io" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 기반 UI 디자인 도구. 손그림 스케치를 디지털 디자인으로 변환
+              </div>
+              <div class="site-tags">
+                <span class="tag">스케치변환</span>
+                <span class="tag">프로토타입</span>
+                <span class="tag">무료체험</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="looka.com logo"
+                    src="https://www.google.com/s2/favicons?domain=looka.com&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Looka</span></span
+                ><a class="site-url" href="https://looka.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 로고 및 브랜드 디자인. 몇 가지 질문만으로 전문적인 로고와
+                브랜드 키트 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">로고</span>
+                <span class="tag">브랜딩</span>
+                <span class="tag">유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="khroma.co logo"
+                    src="https://www.google.com/s2/favicons?domain=khroma.co&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Khroma</span></span
+                ><a class="site-url" href="https://khroma.co" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 컬러 팔레트 생성기. 개인 취향을 학습하여 맞춤형 색상 조합
+                제안
+              </div>
+              <div class="site-tags">
+                <span class="tag">컬러팔레트</span>
+                <span class="tag">개인화</span>
+                <span class="tag">무료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="remove.bg logo"
+                    src="https://www.google.com/s2/favicons?domain=remove.bg&amp;sz=32"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      border-radius: 4px;
+                      margin-right: 8px;
+                    "
+                  /><span>Remove.bg</span></span
+                ><a class="site-url" href="https://remove.bg" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                AI 배경 제거 도구. 클릭 한 번으로 이미지 배경을 자동 제거
+              </div>
+              <div class="site-tags">
+                <span class="tag">배경제거</span>
+                <span class="tag">이미지편집</span>
+                <span class="tag">무료/유료</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="category" data-category="교육/학습">
+          <h2 class="category-title">
+            <span class="category-icon">📚</span>
+            교육/학습 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Khan Academy 로고"
+                    src="https://www.google.com/s2/favicons?domain=khanacademy.org&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Khan Academy</span></span
+                ><a
+                  class="site-url"
+                  href="https://www.khanacademy.org"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                수학, 과학, 역사 등 다양한 과목의 무료 온라인 강의 제공. AI 기반
+                튜터 기능도 탑재
+              </div>
+              <div class="site-tags">
+                <span class="tag">온라인강의</span><span class="tag">무료</span
+                ><span class="tag">과목별학습</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Duolingo 로고"
+                    src="https://www.google.com/s2/favicons?domain=duolingo.com&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Duolingo</span></span
+                ><a
+                  class="site-url"
+                  href="https://www.duolingo.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                게임형 인터페이스를 활용한 언어 학습 플랫폼. AI 튜터와 말하기
+                연습 가능
+              </div>
+              <div class="site-tags">
+                <span class="tag">언어학습</span><span class="tag">게임형</span
+                ><span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Socratic 로고"
+                    src="https://www.google.com/s2/favicons?domain=socratic.org&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Socratic</span></span
+                ><a class="site-url" href="https://socratic.org" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                Google이 제공하는 학습 도우미 앱. 사진을 찍으면 문제를 인식하고
+                해설 제공
+              </div>
+              <div class="site-tags">
+                <span class="tag">문제해설</span
+                ><span class="tag">사진인식</span><span class="tag">무료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Quillionz 로고"
+                    src="https://www.google.com/s2/favicons?domain=quillionz.com&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Quillionz</span></span
+                ><a
+                  class="site-url"
+                  href="https://quillionz.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                텍스트 기반 자동 문제 생성 도구. 퀴즈, 객관식 문항, 서술형
+                문제를 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">문제출제</span><span class="tag">교사용</span
+                ><span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Quizgecko 로고"
+                    src="https://www.google.com/s2/favicons?domain=quizgecko.com&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Quizgecko</span></span
+                ><a
+                  class="site-url"
+                  href="https://quizgecko.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                텍스트나 URL을 입력하면 자동으로 퀴즈를 생성해주는 도구
+              </div>
+              <div class="site-tags">
+                <span class="tag">퀴즈생성</span><span class="tag">자동화</span
+                ><span class="tag">무료체험</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="category" data-category="마케팅">
+          <h2 class="category-title">
+            <span class="category-icon">📈</span>
+            마케팅 AI
+          </h2>
+          <div class="sites-grid">
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Copy.ai 로고"
+                    src="https://www.google.com/s2/favicons?domain=copy.ai&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Copy.ai</span></span
+                ><a class="site-url" href="https://copy.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                마케팅 카피, 블로그 포스트, 이메일 등 다양한 콘텐츠를 AI로 자동
+                생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">카피라이팅</span
+                ><span class="tag">콘텐츠</span
+                ><span class="tag">무료체험</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Jasper 로고"
+                    src="https://www.google.com/s2/favicons?domain=jasper.ai&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Jasper</span></span
+                ><a class="site-url" href="https://jasper.ai" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                브랜드 보이스에 맞춘 콘텐츠를 자동 생성하는 AI 마케팅 플랫폼
+              </div>
+              <div class="site-tags">
+                <span class="tag">브랜딩</span
+                ><span class="tag">콘텐츠생성</span
+                ><span class="tag">유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Writesonic 로고"
+                    src="https://www.google.com/s2/favicons?domain=writesonic.com&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Writesonic</span></span
+                ><a
+                  class="site-url"
+                  href="https://writesonic.com"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                웹사이트, 광고 문구, 제품 설명 등 다양한 마케팅 콘텐츠를 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">광고문구</span
+                ><span class="tag">웹콘텐츠</span
+                ><span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="Ocoya 로고"
+                    src="https://www.google.com/s2/favicons?domain=ocoya.com&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>Ocoya</span></span
+                ><a class="site-url" href="https://ocoya.com" target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                소셜 미디어 콘텐츠 제작 및 예약 게시까지 가능한 올인원 마케팅
+                도구
+              </div>
+              <div class="site-tags">
+                <span class="tag">소셜미디어</span
+                ><span class="tag">예약게시</span
+                ><span class="tag">무료/유료</span>
+              </div>
+            </div>
+            <div class="site-card">
+              <div
+                class="site-name"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 10px;
+                "
+              >
+                <span style="display: flex; align-items: center; gap: 10px"
+                  ><img
+                    alt="AdCreative.ai 로고"
+                    src="https://www.google.com/s2/favicons?domain=adcreative.ai&amp;sz=32"
+                    style="width: 24px; height: 24px; border-radius: 4px"
+                  /><span>AdCreative.ai</span></span
+                ><a
+                  class="site-url"
+                  href="https://www.adcreative.ai"
+                  target="_blank"
+                  >방문 ↗</a
+                >
+              </div>
+              <div class="site-description">
+                성과 중심의 광고 크리에이티브를 AI로 자동 생성
+              </div>
+              <div class="site-tags">
+                <span class="tag">광고디자인</span
+                ><span class="tag">성과중심</span
+                ><span class="tag">무료체험</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-results hidden">
+      <h3>🔍 검색 결과가 없습니다</h3>
+      <p>다른 키워드로 검색해보세요</p>
+    </div>
+    <footer
+      style="
+        text-align: center;
+        padding: 40px 20px;
+        font-size: 0.9em;
+        color: #888;
+      "
+    >
+      © 2025 AI 사이트 모음 |
+      <a href="privacy.html" style="color: #888">개인정보처리방침</a> |
+      <a href="contact.html" style="color: #888">연락처</a>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const categories = document.querySelectorAll(".category");
+        const noResults = document.querySelector(".no-results");
+
+        // 검색 강조용 highlight 함수
+        function highlight(text, query) {
+          const regex = new RegExp(
+            "(" + query.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&") + ")",
+            "gi"
+          );
+          return text.replace(regex, "<mark>$1</mark>");
+        }
+
+        searchInput.addEventListener("input", function () {
+          const query = this.value.toLowerCase().trim();
+          let hasResults = false;
+          let firstMatch = null;
+
+          categories.forEach((category) => {
+            let categoryHasVisible = false;
+            const cards = category.querySelectorAll(".site-card");
+            cards.forEach((card) => {
+              const text = card.innerText.toLowerCase();
+              const match = text.includes(query);
+              card.style.display = match ? "block" : "none";
+
+              // 강조 및 첫 매치 기록
+              const nameElem = card.querySelector(".site-name");
+              if (nameElem) {
+                nameElem.innerHTML = nameElem.innerText;
+                if (match && query.length > 0) {
+                  nameElem.innerHTML = highlight(nameElem.innerText, query);
+                }
+              }
+
+              if (match) {
+                if (!firstMatch) firstMatch = card;
+                categoryHasVisible = true;
+              }
+            });
+
+            category.style.display = categoryHasVisible ? "block" : "none";
+            if (categoryHasVisible) hasResults = true;
+          });
+
+          if (noResults) {
+            noResults.classList.toggle("hidden", hasResults);
+          }
+
+          if (firstMatch) {
+            firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+
+        // 검색창 초기화 버튼
+        const clearBtn = document.createElement("span");
+        clearBtn.textContent = "✖";
+        clearBtn.style.position = "absolute";
+        clearBtn.style.right = "30px";
+        clearBtn.style.top = "35px";
+        clearBtn.style.cursor = "pointer";
+        clearBtn.style.fontSize = "18px";
+        clearBtn.style.color = "#aaa";
+
+        clearBtn.addEventListener("click", function () {
+          searchInput.value = "";
+          searchInput.dispatchEvent(new Event("input"));
+        });
+
+        const searchBox = document.querySelector(".search-box");
+        searchBox.style.position = "relative";
+      });
+    </script>
+  </body>
+</html>
