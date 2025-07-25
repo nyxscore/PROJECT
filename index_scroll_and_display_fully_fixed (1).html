@@ -4,19 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>AI 사이트 모음 - 기능별로 담아낸 AI 도시락</title>
-    <ins
-      class="kakao_ad_area"
-      style="display: none"
-      data-ad-unit="DAN-ZJIYsHAIO4T5JcBz"
-      data-ad-width="300"
-      data-ad-height="250"
-    ></ins>
-    <script
-      type="text/javascript"
-      src="//t1.daumcdn.net/kas/static/ba.min.js"
-      async
-    ></script>
+    <title>AI 사이트 모음 - 기능별 정리</title>
     <style>
       * {
         margin: 0;
@@ -300,18 +288,35 @@
       .site-name img {
         margin-right: 6px;
       }
+
+      #scrollToTopBtn {
+        display: none;
+        position: fixed;
+        bottom: 40px;
+        right: 30px;
+        z-index: 99;
+        font-size: 24px;
+        border: none;
+        outline: none;
+        background-color: #f97316;
+        color: white;
+        cursor: pointer;
+        padding: 12px 16px;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+      #scrollToTopBtn:hover {
+        background-color: #e65c00;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
         <h1 style="cursor: pointer" onclick="location.reload()">
-          🍱 AI 도시락
+          🤖 AI 사이트 모음
         </h1>
-        <p>
-          AI 사이트 모음<br />
-          기능별로 정리된 최고의 AI 도구들을 만나보세요
-        </p>
+        <p>기능별로 정리된 최고의 AI 도구들을 만나보세요</p>
       </div>
       <div class="search-box">
         <input
@@ -321,18 +326,6 @@
           type="text"
         />
       </div>
-      <ins
-        class="kakao_ad_area"
-        style="display: none"
-        data-ad-unit="DAN-ZJIYsHAIO4T5JcBz"
-        data-ad-width="300"
-        data-ad-height="250"
-      ></ins>
-      <script
-        type="text/javascript"
-        src="//t1.daumcdn.net/kas/static/ba.min.js"
-        async
-      ></script>
       <div class="category-nav">
         <div class="nav-title">카테고리별 바로가기</div>
         <div class="nav-buttons">
@@ -370,7 +363,7 @@
                     alt="ChatGPT Logo"
                     src="https://chat.openai.com/favicon.ico"
                     style="width: 24px; height: 24px; border-radius: 4px"
-                  /><span>ChatGPT방문 ↗</span></span
+                  /><span>ChatGPT</span></span
                 ><a
                   class="site-url"
                   href="https://chat.openai.com"
@@ -1982,79 +1975,84 @@
     </footer>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("searchInput");
-        const categories = document.querySelectorAll(".category");
-        const noResults = document.querySelector(".no-results");
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("searchInput");
+  const categories = document.querySelectorAll(".category");
+  const noResults = document.querySelector(".no-results");
+  const navButtons = document.querySelectorAll(".nav-btn");
 
-        // 검색 강조용 highlight 함수
-        function highlight(text, query) {
-          const regex = new RegExp(
-            "(" + query.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&") + ")",
-            "gi"
-          );
-          return text.replace(regex, "<mark>$1</mark>");
+  function highlight(text, query) {
+    const regex = new RegExp("(" + query.replace(/[-/\^$*+?.()|[\]{}]/g, "\$&") + ")", "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+  }
+
+  searchInput.addEventListener("input", function () {
+    const query = this.value.toLowerCase().trim();
+    let hasResults = false;
+    let firstMatch = null;
+
+    categories.forEach((category) => {
+      let categoryHasVisible = false;
+      const cards = category.querySelectorAll(".site-card");
+
+      cards.forEach((card) => {
+        const text = card.innerText.toLowerCase();
+        const match = text.includes(query);
+
+        card.style.display = "block";  // always show
+        const nameElem = card.querySelector(".site-name");
+        if (nameElem) {
+          nameElem.innerHTML = nameElem.innerText;
+          if (match && query.length > 0) {
+            nameElem.innerHTML = highlight(nameElem.innerText, query);
+          }
         }
 
-        searchInput.addEventListener("input", function () {
-          const query = this.value.toLowerCase().trim();
-          let hasResults = false;
-          let firstMatch = null;
+        if (match && !firstMatch) {
+          firstMatch = card;
+        }
 
-          categories.forEach((category) => {
-            let categoryHasVisible = false;
-            const cards = category.querySelectorAll(".site-card");
-            cards.forEach((card) => {
-              const text = card.innerText.toLowerCase();
-              const match = text.includes(query);
-              card.style.display = match ? "block" : "none";
-
-              // 강조 및 첫 매치 기록
-              const nameElem = card.querySelector(".site-name");
-              if (nameElem) {
-                nameElem.innerHTML = nameElem.innerText;
-                if (match && query.length > 0) {
-                  nameElem.innerHTML = highlight(nameElem.innerText, query);
-                }
-              }
-
-              if (match) {
-                if (!firstMatch) firstMatch = card;
-                categoryHasVisible = true;
-              }
-            });
-
-            category.style.display = categoryHasVisible ? "block" : "none";
-            if (categoryHasVisible) hasResults = true;
-          });
-
-          if (noResults) {
-            noResults.classList.toggle("hidden", hasResults);
-          }
-
-          if (firstMatch) {
-            firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        });
-
-        // 검색창 초기화 버튼
-        const clearBtn = document.createElement("span");
-        clearBtn.textContent = "✖";
-        clearBtn.style.position = "absolute";
-        clearBtn.style.right = "30px";
-        clearBtn.style.top = "35px";
-        clearBtn.style.cursor = "pointer";
-        clearBtn.style.fontSize = "18px";
-        clearBtn.style.color = "#aaa";
-
-        clearBtn.addEventListener("click", function () {
-          searchInput.value = "";
-          searchInput.dispatchEvent(new Event("input"));
-        });
-
-        const searchBox = document.querySelector(".search-box");
-        searchBox.style.position = "relative";
+        if (match) {
+          categoryHasVisible = true;
+        }
       });
-    </script>
+
+      category.style.display = "block";  // always keep category visible
+      if (categoryHasVisible) hasResults = true;
+    });
+
+    if (noResults) {
+      noResults.style.display = hasResults ? "none" : "block";
+    }
+
+    if (firstMatch) {
+  setTimeout(() => {
+  const topOfSection = targetCategory.querySelector("h2");
+  if (topOfSection) {
+    topOfSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  }, 100);
+          }
+        }, 0);
+      }
+
+      if (searchInput) {
+        searchInput.value = "";
+        searchInput.dispatchEvent(new Event("input"));
+      }
+    });
+  });
+
+  const scrollBtn = document.getElementById("scrollToTopBtn");
+  window.addEventListener("scroll", function () {
+    scrollBtn.style.display = window.scrollY > 300 ? "block" : "none";
+  });
+  scrollBtn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+</script>
+    <button id="scrollToTopBtn" title="맨 위로">⬆</button>
   </body>
 </html>
